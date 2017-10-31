@@ -25,13 +25,15 @@ Overall, there will be two datasets. The first one would be Amazon Review datase
 # A list of internal milestones up until project milestone 2
 The first part of this project would be to analyse amazon dataset and find relations between the rating and review of the product. From there an accurate rating prediction model can be derived. To achieve this purpose, we will consider text of user reviews as the input and try to convert this input into a (numerical) form that machine learning algorithms can process. The quantity to predict will be the corresponding rating of products.
 
-The second part, will be to test our model on Twitter dataset. We try to predict rating of a product by analyzing tweets about that product and compare that rating with the existing rating in Amazon. For products that have many rating we expect, the rating found using tweets to be similar to the existing one in Amazon. The challenge in this part will be to use Twitter API to retrieve related tweets and put them into a suitable format for our prediction model.
+The second part, will be to test our model on Twitter dataset. We will try to predict ratings of a product by analyzing its review on twitter and compare it with the existing Amazon rating. The challenge in this part will be to use Twitter API to retrieve related tweets and put them into a suitable format for our prediction model.
 
 Up to here is the part that we will try to accomplish until milestone 2 (28 November).
 
-The next part will be try generalizing this model to assign a rating for various other ***things***. Take an event for example, the vocabulary used for describing satisfaction level related to an event is expected to be similar with the vocabulary used for criticizing a product therefore, our model might also be able to assign an accurate rating to an event by analyzing tweets about the event. Same logic also holds for companies, concepts and many more. However, it is important to note that, to be able to rate ***certain*** subjects such as political figures, it is highly probable that the set of words used in Amazon Reviews dataset won't be sufficient to calculate accurate ratings. In such cases it is required to expand the training dataset by using different approaches.
+The next part will be try generalizing this model to assign a rating for various other ***topics***. Take an event for example, the tweet vocabulary is expected to be similar with the words used for criticizing a product. Same logic also holds for companies, concepts and many more. 
 
-Finally, we are planing to extract meaningful statistics about the satisfaction level of users for a given ***object/concept/event***. For instance, we are going to measure the satisfaction level by gender, age group or country for various different subject such as iPhone X, the world cup 2018, The Higgs Boson discovery...
+(However, it is important to note that, to be able to rate ***certain*** subjects such as political figures, it is highly probable that the set of words used in Amazon Reviews dataset won't be sufficient to calculate accurate ratings. In such cases it is required to expand the training dataset by using different approaches.)
+
+Finally, we are planing to extract meaningful statistics about the satisfaction level of users for a given ***object/concept/event*** that still have to be defined. For instance, we are going to measure the satisfaction level by gender, age or country for various different subject such as iPhone X, the world cup 2018, The Higgs Boson discovery...
 
 # Questions for TAa
 N/A
