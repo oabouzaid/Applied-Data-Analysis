@@ -7,14 +7,15 @@ For a given product, we can imagine that the users didn't explicitly use the Ama
 
 # Research questions
 Is it possible measure the ***satisfaction level*** of people related to an ***object/concept/event*** accurately and conveniently?
+
 Can we find differences in the rating of a specific event/topic by country/age/gender/social class?
+
 Can we find a relation between 2 highly rated events that appeared at the same time?
 
 # Dataset
 For the initial phase of our project we are planing to use Amazon Review dataset. The specific parts that we are interested in are comments and ratings related to products. This dataset size should be the 20GB of the amazon reviews.
 
 (We are planing to train our model such that it will assign a rating to a given text. To be able to feed the prediction model with textual data, we are going to use *fasttext* method so that it will be possible to represent textual data with vectors consisting of numbers. We expect to have a robust rating prediction system that can accurately rate a product based on textual input. )
-
 
 In the next step, we will test our model using Twitter data. For instance we will search for a product using Twitter API and retrieve tweets written about this product. This dataset will be dynamic according to the user request.
 
