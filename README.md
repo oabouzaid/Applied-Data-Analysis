@@ -1,2 +1,2 @@
-# Homeworks
-Repo for homework and project
+# Applied Data Analysis
+Repo for homework assignments and project
