@@ -1,45 +1,52 @@
-# Generalized Rating Analysis
+### Patent application Analysis
 
 
-# Abstract
+## Abstract
+The idea of our project is to give a clear insight into the trends in research around the world, and shed the light on the latest technologies by analyzing a dataset of patents relative to these technologies. We shall give statistics by country and company of the number of granted patents, and analyze their evolution over time aiming to extract meaningful informations relative to the growth of a technology/industry.
 
-Throughout this project, we will accurately analyze what people think about a given idea, product, phenomenon, trending topics, etc. The idea behind this is to go from the user query and scrap twitter API to find all tweets relative to that query. We will then analyze the tweets word by word, and rate how positive out of 5 they are, by seeking words relative to emotions, opinions, and personal thoughts. We will then average those ratings to get the ‘generalized satisfaction Analysis’ about the given query.
+Patent application give an accurate idea on the evolution of high-end sectors such as Energy, Financial Technology (FinTech), Artificial Intelligence. The core of our project will be to study these 3 different sectors in order to understand their evolution in the past and predict their growth in the future.
 
-This analysis could assess more accurately how much was the success of a product and help the customers make a purchasing decision.
-On the other way around, analysts could take benefit of this ranking model to find valuable insights about a product, based on tweet assessment. They could for example measure how successful an upcoming product will be and have an a priori overview at how people will be positive about it in the future, by location, gender,  or age. Furthermore, this tool could be even used to find correlations between uprising trends/events. 
+## Research questions
+# In general:
 
-# Research questions
-Is it possible measure the ***satisfaction level*** of people related to an ***object/concept/event*** accurately and conveniently?
+What is the general trend in research (patent application)? Is it growing?    	
+Which sectors have grown the most over time? (e.g: IT, Energy, Medical, Consumers goods, etc.) In which regions? 
+Which countries deliver more patents? Is this correlated with the quality of their universities?
+Out of all the patent applications, how many of them are actually granted?
+In the future, what will be the evolution of the chosen sectors?
 
-Can we find differences in the rating of a specific event/topic by country/age/gender/social class?
+# By sector of interest:
 
-Can we find a relation between 2 highly rated events that appeared at the same time?
+Energy: 
+Is the research in Energy in the US increasing/decreasing? 
+Did Trump election or COOP21 influence the research in the Energy sector (less patents delivered after any political decision? Which green energy sector is the most popular currently and how did it evolve in the past (wind, solar, geothermal, energy storage …)? 
+Which country is more involved in that energy sector research? 
+What is the proportion of patent applications in the fossil energy compared to the green energy and how did it evolve over time?
 
-# Dataset
-Throughout this project, we will manipulate the **Amazon Review dataset**, along with **Twitter API** to enrich our data.
+FinTech: 
+How did financial technology grow over the past decade? 
+How important is the use of mobile e-banking apps over the globe? 
+Which countries are involved the most in FinTech? Which companies hold most of FinTech patents? 
+All these questions can be answered by analyzing the patents relative to these technologies and observing their evolution over time.
 
-For the initial phase of our project we are planing to use **Amazon Review dataset**. The specific parts that we are interested in are comments and ratings related to products. This dataset size should be roughly 20GB of the amazon reviews.
+Artificial Intelligence:
+Which are the most cited and used patent within the field of AI?
+What is the popularity trend of the AI field? Like in its popularity in 1960s, will the popularity in recent years will also fade away in time or this time characteristic of the popularity trend is different?
+Which companies are holding most AI patents? Is there a relationship between number of AI patents hold and the rank (according to Forbes top 500) of a company (meaning that smartest companies are also the the biggest ones)?
+Which countries have the most patents related to artificial intelligence?
+Considering that Putin recently said “the nation that leads in AI will be the ruler of the world”. What is the relationship between number AI related patents and the rank of countries’ defense industry?
 
-We are planing to train our model such that it will assign a rating to a given text. To be able to feed the prediction model with textual data, we are going to use *fasttext* method so that it will be possible to represent textual data with vectors consisting of numbers. We expect to have a robust rating prediction system that can accurately rate a product based on textual input. 
-
-As a second step, we will test our model using **Twitter data**. For instance we will search for a product using Twitter API and retrieve tweets written about this product. This dataset will be dynamic according to the user request.
-
-Then, we rate each and every tweet using our trained model and compare overall rating of this particular product with its score on Amazon’s dataset. For products that are rated by many customers on Amazon, we expect its rating to be similar with the rating we will found using tweets about the product. Our aim is to justify once more that the constructed model is working properly. 
-Overall, there will be two datasets. 
+## Dataset
+The patent dataset (http://www.patentsview.org) will be used to carry out our research. PatentsView provides a useful API that allows us to make specific research according to a patent title, inventor or locations. For example, we could research how many patents in a specific topic were delivered by IBM in California from 2012 and 2015. It is possible that we will need other informations not contained in the dataset (e.g university ranking) which are useful to find correlations and enrich our dataset. For those specific case, we will scrap those informations from the web. At the end, the API will be used to make more specific research related to each sector of interest (e.g number of patents in solar panel vs. number of wind turbines design patents).
 
 
-# A list of internal milestones up until project milestone 2
+## A list of internal milestones up until project milestone 2
+Initially, our aim will be to analyse the dataset in broad terms. Couple of task we are planning to accomplish are as follows.
 
-The first part of this project will consist in analysing the **Amazon dataset** and find relations between the rating and review of the product, using Machine Learning algorithms.
+- Analyse country-wise distribution of granted patents (in terms of number of patents)
+- Analyse company-wise distribution of patents
+- Granted vs. pending patents
+- Analyze technologies (categories) that are most commonly patented in recent years and group by cathegory
 
-The second part will be to test our model on the **Twitter dataset**. We will predict product ratings by analyzing their opinions on twitter and compare them with the existing Amazon rating. The challenge in this part will be to use Twitter API to retrieve related tweets and put them into a suitable format for our prediction model.
-
-Up to this point, we will have accomplished the work until milestone 2 (28 November).
-
-The next part will consist in generalizing this model to be able to assign a rating for various other ***topics***. This will rely on analyzing the **enthusiasm level** wihtin tweets relative to this **topic** and give them a rank accordingly.  
-Same logic also holds for companies, political decisions, and so on. 
-
-Finally, we are planing to extract meaningful statistics about the satisfaction level of users for a given ***object/concept/event*** that still have to be defined. For instance, we are going to measure the satisfaction level by gender, age or country for various different subject such as iPhone X, the world cup 2018, The Higgs Boson discovery...
-
-# Questions for TAs
+## Questions for TAs
 N/A
