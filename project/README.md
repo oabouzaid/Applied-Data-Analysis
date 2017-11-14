@@ -1,4 +1,4 @@
-### Patent application Analysis
+# Patent application Analysis
 
 
 ## Abstract
@@ -7,7 +7,7 @@ The idea of our project is to give a clear insight into the trends in research a
 Patent application give an accurate idea on the evolution of high-end sectors such as Energy, Financial Technology (FinTech), Artificial Intelligence. The core of our project will be to study these 3 different sectors in order to understand their evolution in the past and predict their growth in the future.
 
 ## Research questions
-# In general:
+### In general:
 
 What is the general trend in research (patent application)? Is it growing?    	
 Which sectors have grown the most over time? (e.g: IT, Energy, Medical, Consumers goods, etc.) In which regions? 
@@ -15,7 +15,7 @@ Which countries deliver more patents? Is this correlated with the quality of the
 Out of all the patent applications, how many of them are actually granted?
 In the future, what will be the evolution of the chosen sectors?
 
-# By sector of interest:
+### By sector of interest:
 
 Energy: 
 Is the research in Energy in the US increasing/decreasing? 
