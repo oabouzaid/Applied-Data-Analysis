@@ -9,35 +9,39 @@ import folium
 import json
 import branca.colormap as cm
 
+''' N.B: PatentsView.org API does not allow us to get more than 100'000 per request.
+    In case there is more than 100'000 patents, we will divide our request into 2 chunks, namely 2 times 6 months,
+    if we were to collect patents for a given year. '''
 
 def BASE_URL():
+    ''' Returns the base URL of PatentsView website '''
     return 'http://www.patentsview.org/api/patents/query?'
 
-#The following function return the number of patents for a given month in a given year
 def get_nb_patents_month(month, year):
+    ''' Returns the number of patents for a given month of a given year '''
     s = ''
-    #Special case : if month= december take from first of december to first of january next year
+    
+    #Special case: if (month == December) we take the patents from December 1st to to January 1st of the following year
     if(month!='12'): 
         s = year+'-'+str(int(month)+1) 
     else:
         s = str(int(year)+1)+'-01'
     query = 'q={"_and":[{"_gte":{"patent_date":"'+year+'-'+month+'-01"}},\
         {"_lt":{"patent_date":"'+ s +'-01"}}]}' 
-    #Send the request
+    
+    #Sends a GET request and store the data in a JSON file
     r = requests.get(BASE_URL()+query).json()
-    #Check if the number of patents obtains is larger than 100000 which involves a wrong result
+    #Check if the number of patents obtained is larger than 100'000, which leads to biased result
     if pd.DataFrame(r).total_patent_count[0] > 100000:
-        print("number of patent innacurate because greater than 100000")
+        print("Number of patents exceeds 100'000, please take a shorter interval")
     return pd.DataFrame(r).total_patent_count[0]
+ 
 
-
-
-# The following function return the number of granted patent for a given year.
-# The previous funcion get_nb_patents_month is used and the every month in the year are added together
 def get_nb_patents_year(year):
+    ''' Returns the number of granted patent for a given year (12 months). Uses get_nb_patents_month() '''
     nb_patent=0
     for i in range(12):
-        #Special case, if the month number is less than 10, send "0x" with x = month number
+        #Special case, if the month number is less than 10, append a '0'
         if i<10:
             nb_patent+=get_nb_patents_month('0'+str(i), year)
         else:
@@ -48,17 +52,17 @@ def get_nb_patents_year(year):
 
 
 def get_nb_patent_country(country):
-    #Request for the year 2016 and a given country
-    #Output the inventor country for checking purpose
+    ''' Requests all the patents of the year 2016 for a given country '''
+    ''' Outputs the inventor country for checking purposes '''
     query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},\
     {"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
     output='&f=["inventor_country"]'
     r = requests.get(BASE_URL()+query+output).json() 
 
-    #Catch an exception for the case a given country did not delivered any patent in 2016 
+    #Catch an exception in case a given country did not deliver any patent in 2016, i.e. is not cited in the DataBase
     try:
         nb_patents= pd.DataFrame(r).total_patent_count[0] 
-        #Special case (the request cannot give more than 100'000 results)
+        #Special case: The request cannot give more than 100'000 patents, we break the time interval into 2 
         if nb_patents >= 100000: 
             query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},{"_lt":{"patent_date":"2016-07-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
             r = requests.get(BASE_URL()+query+output).json() 
@@ -73,14 +77,15 @@ def get_nb_patent_country(country):
 
 
 def ret_color(feature, colors):
+    ''' Maps each country (precisely its ISO-ALPHA 2 code) to a color depending on the number of patents'''
     if (feature['properties']['iso_a2'] in colors.keys()):
         return colors[feature['properties']['iso_a2']]
     else:
-        #Return the white color if the country does not show up in the list of patents 
+        #Returns the white color if a country does not show up in the list of patents 
         return '#ffffff'
 
-'''This function returns the granted patents between the given dates'''
 def get_patents(year_start, month_start, year_end, month_end):
+    '''Returns the granted patents between the given dates (year and month)'''
     '''Get patent_id, patent_number and patent_title for granted patents between given dates.'''
     
     query='q={"_and":[{"_gte":{"patent_date":"%d-%d-01"}},\
@@ -90,13 +95,13 @@ def get_patents(year_start, month_start, year_end, month_end):
 
 
 
-# GET COMPANY AND TOTAL PATENT COUNT
 def get_company(year_start, month_start, year_end, month_end ,total_page_num=10):
+    ''' Get all the granted patents by companies, between the two given dates'''
     company_total_patent = dict()
     for page_num in range(total_page_num):
         patent_json = get_patents_company(2017, 1, 2017, 5, page_num+1)
         if pd.DataFrame(patent_json).total_patent_count[0] > 100000:
-            print("number of patent innacurate because greater than 100000")
+            print("Number of patents exceeds 100'000, please take a shorter interval")
         for patent in patent_json['patents']:
             company_name = patent['assignees'][0]['assignee_organization']
             total_patent =  patent['assignees'][0]['assignee_total_num_patents']
@@ -106,7 +111,8 @@ def get_company(year_start, month_start, year_end, month_end ,total_page_num=10)
 
 
 def get_patents_company(year_start, month_start, year_end, month_end, page_num):
-    '''Get assignee_organization and assignee_total_num_patents for patents granted between given dates.'''
+    '''Get all granted patents by assignee_organization (company name) and assignee_total_num_patents (number of that companie's patents)
+        between given dates.'''
     query='q={"_and":[{"_gte":{"patent_date":"%d-%d-01"}},\
                       {"_lt":{"patent_date":"%d-%d-01"}}]}\
                       &o={"page":%d,"per_page":10000}\
@@ -117,7 +123,8 @@ def get_patents_company(year_start, month_start, year_end, month_end, page_num):
 
 # Helper function 
 def get_patents_country_sector(year_start, month_start, year_end, month_end, page_num):
-    '''Get assignee_organization and assignee_total_num_patents for patents granted between given dates.''' 
+    '''Get all granted patents by assignee_organization (company name) and assignee_total_num_patents (number of that companie's patents)
+        by sector, using CPC between given dates. (CPC stands for Cooperative Patent Classification)'''
     query='q={"_and":[{"_gte":{"patent_date":"%d-%d-01"}},\
                       {"_lt":{"patent_date":"%d-%d-01"}}]}\
                       &o={"page":%d,"per_page":10000}\
@@ -128,8 +135,9 @@ def get_patents_country_sector(year_start, month_start, year_end, month_end, pag
 
 
 
-# GET COUNTRY AND TOTAL PATENT COUNT IN SECTORS
 def get_countries_by_sectors():
+    ''' Returns a dictionary that contains categorized patents into sectors,
+     for each country, using CPC (Cooperative Patent Classification)'''
     country_total_patent_category = dict()
     total_page_num = 3
     for i in range(11):
@@ -153,8 +161,9 @@ def get_countries_by_sectors():
     return country_total_patent_category
 
 
-# Plot the top 10 countries in terms of number of patents, by country
+
 def fıgure_by_sector(category, label, fig_index, axes, df): 
+    ''' Plots the TOP10 countries for a given sector (Categories 'A','B','C', etc.), in terms of the number of granted patents'''
     a = df.sort_values(by=category, ascending=False)
     a.head(10).plot.bar(y=category, figsize=(9,7), fontsize=20, subplots=True, ax=axes[fig_index[0], fig_index[1]], label=label)
 
@@ -164,52 +173,45 @@ category_label = [('A', 'Human Necessities'),('B', 'Operations and Transport'),(
 
 
 
-
-def figure_by_sector(category, label, fig_index):
-    '''This function draws barplots the top 10 countries in terms of number of patents, by sectors'''
-    top_countries_df = patent_category_df.sort_values(by=category, ascending=False)
-    top_countries_df.head(10).plot.bar(y=category, figsize=(9,7), fontsize=20, subplots=True, ax=axes[fig_index[0], fig_index[1]], label=label)
-
-category_label = [('A', 'Human Necessities'),('B', 'Operations and Transport'),('C', 'Chemistry and Metallurgys'),('D', 'Textiles'),\
-                  ('E', 'Fixed Constructions'),('F', 'Mechanical Engineering'),('G', 'Physics'),('H', 'Electricity'),\
-                  ('Y', 'Emerging Cross-Sectional Technologies'),]
-    
-
-
-def draw_radar_graph(df, index,
-                    title='', sub_ = 111):
+def spider_chart(df, index, title=''):
+    ''' Draws a spider chart showing the involvment level of a given country in all the 7 sectors in CPC 
+        (Cooperative Patent Classification) by showing the relative number of granted patents for each sector, country-wise'''
     labels = np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'Y'])
+
+    stats = df.loc[index, labels].values
+    angles=np.linspace(0, 2*np.pi, len(labels), endpoint=False) 
+  
+    stats=np.concatenate((stats,[stats[0]]))  
+    angles=np.concatenate((angles,[angles[0]])) 
+    
+    fig= plt.figure()
+    ax = fig.add_subplot(111, polar=True)   # Setting up a polar axis
+    ax.plot(angles, stats, 'o-', linewidth=1.5, color='r')  # Draw the plot (or the frame on the radar chart)
+    ax.fill(angles, stats, alpha=0.25, color='r') # Fills in the inner area of the spider chart
+
     labels_ = np.array(['Human Necessities', 'Transport', 'Chemistry',\
                        'Textiles', 'Constructions', 'MechEng',\
                        'Physics', 'Electricity', 'Cross-Sectional Technologies'])
 
-    stats = df.loc[index, labels].values
-    angles=np.linspace(0, 2*np.pi, len(labels), endpoint=False) # Set the angle
+    ax.set_title(title) # The title corresponds to the name of the given country
+    ax.set_thetagrids(angles * 180/np.pi, labels_)  #Label the axis using shorter terms
     
-    # close the plot
-    stats=np.concatenate((stats,[stats[0]]))  # Closed
-    angles=np.concatenate((angles,[angles[0]]))  # Closed
-    
-    fig= plt.figure()
-    ax = fig.add_subplot(111, polar=True)   # Set polar axis
-    ax.plot(angles, stats, 'o-', linewidth=2, color='r')  # Draw the plot (or the frame on the radar chart)
-    ax.fill(angles, stats, alpha=0.25, color='r')  #Fulfill the area
-    ax.set_thetagrids(angles * 180/np.pi, labels_)  # Set the label for each axis
-    ax.set_title(title)
-    return ax
 
 def get_patents_keywords(key_words,year):
+    ''' Returns all the patents containing the given keywords, for a given year''' 
+    
     #Year query parameters
     query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
   
     nb_patents=0
     dfPatents=pd.DataFrame()
-    #Send a query for every key words
+    #Send a query for every keyword
     for i in key_words:         
         query_key_words='{"_text_phrase":{"patent_title":"'+i+'"}}'
         query='q={"_and":['+query_year+','+query_key_words+']}' 
         output='&f=["patent_title","patent_number"]' 
-        #Exception manager in case no patents are found for a given key word
+        
+        #Exception handler in case no patent is found for a given keyword
         try:
             r = requests.get(BASE_URL()+query+output).json()
             nb_patents+=pd.DataFrame(r).total_patent_count[0] 
