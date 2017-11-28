@@ -26,6 +26,7 @@ def get_nb_patents_month(month, year):
         s = year+'-'+str(int(month)+1) 
     else:
         s = str(int(year)+1)+'-01'
+    #query to be sent
     query = 'q={"_and":[{"_gte":{"patent_date":"'+year+'-'+month+'-01"}},\
         {"_lt":{"patent_date":"'+ s +'-01"}}]}' 
     
@@ -34,11 +35,13 @@ def get_nb_patents_month(month, year):
     #Check if the number of patents obtained is larger than 100'000, which leads to biased result
     if pd.DataFrame(r).total_patent_count[0] > 100000:
         print("Number of patents exceeds 100'000, please take a shorter interval")
+    #The total number of patents is contained in every rows of the dataframe (take 0 by default)
     return pd.DataFrame(r).total_patent_count[0]
  
 
 def get_nb_patents_year(year):
-    ''' Returns the number of granted patent for a given year (12 months). Uses get_nb_patents_month() '''
+    ''' Returns the number of granted patent for a given year (12 months). Uses get_nb_patents_month() to
+    add every months together'''
     nb_patent=0
     for i in range(12):
         #Special case, if the month number is less than 10, append a '0'
@@ -64,13 +67,16 @@ def get_nb_patent_country(country):
         nb_patents= pd.DataFrame(r).total_patent_count[0] 
         #Special case: The request cannot give more than 100'000 patents, we break the time interval into 2 
         if nb_patents >= 100000: 
+            #Send the request for twice 6 month (result always less than 100000)
             query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},{"_lt":{"patent_date":"2016-07-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
             r = requests.get(BASE_URL()+query+output).json() 
+            #number of patent is countained in every rows of the dataframe            
             nb_patents= pd.DataFrame(r).total_patent_count[0] 
             query='q={"_and":[{"_gte":{"patent_date":"2016-07-01"}},{"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
             r = requests.get(BASE_URL()+query+output).json() 
+            #Add the 2 requests together
             nb_patents += pd.DataFrame(r).total_patent_count[0] 
-    except ValueError:
+    except ValueError: #In case no patents are found
         nb_patents=0   
     return int(nb_patents)
 
