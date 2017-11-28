@@ -1,4 +1,4 @@
-# Patent application Analysis
+# Patent Application Analysis
 
 
 ## Abstract
@@ -55,14 +55,14 @@ Several results can be concluded from our research:
   - Most of the patents are published in Physics, followed by Electricity and Human Necessities
   - Switzerland and Germany put more effort in the transport sector than the US or Canada
   - In general, European countries are focused more or less on the same sectors
-  - In term of solar energy, we noted that this technology exploded between 2009 and 2013, especially in 2010
+  - In terms of solar energy, we noted that this technology exploded between 2009 and 2013, especially in 2010
   
-## Objective for milestone 3
-For the final milestone, the project will be more focus on the specific sectors of interest (Energy, AI, Fintech). The research questions will be answered. Correlation between the specific sectors and the other patent application will be found trying to find explanation related to the evolution of those technologies. Every sectors will be studied into detailed for relevant and specific countries/companies. 
-Because from milestone 2, we noticed that the pattern of the countries are very similar between continents, we can study each technology for one country per continent (We will aslo study if this classification is relevant). Every sectors of interest evolved differently during the past. 
-the final goal of this project will be to predict what is the potental of those different technologies. In order to classify a patent in a sector, we shall find keywords that are relevant for the given technology.
+## Objectives for milestone 3
+For the final milestone, the project will be more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions will be answered. Correlations between the specific sectors and the other patent applications will be found trying to find explanation related to the evolution of those technologies. Every sector will be studied into detailed for relevant and specific countries/companies. 
+From milestone 2, we noticed that the pattern of the countries are very similar between countries within the same continent, we can study each technology for one country per continent (We will aslo study if this classification is relevant). Every sector of interest evolved differently during the past. 
+the final goal of this project will be to predict what is the potential of those different technologies. In order to classify a patent in a sector, we shall find keywords that are relevant for the given technology.
 
 ## Questions for TAs
-Can we correlate patents application with how much reaserch is made for the different sectors (Energy, AI and Fintech) ?
-Is it relevant to find a correlation between university qualisy and umber of patents published by this university ? 
+Can we correlate patent applications with how much reaserch is carried for the different sectors (Energy, AI and FinTech)?
+Is it relevant to find a correlation between university quality and the number of patents published by this university? 
 Any advice to find relevant keywords which will allow us to classify a patent into a specific technology?
