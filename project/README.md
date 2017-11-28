@@ -46,7 +46,7 @@ Initially, our aim will be to analyse the dataset in broad terms. Couple of task
 - Analyse country-wise distribution of granted patents (in terms of number of patents)
 - Analyse company-wise distribution of patents
 - Granted vs. pending patents
-- Analyze technologies (categories) that are most commonly patented in recent years and group by cathegory
+- Analyze technologies (categories) that are most commonly patented in recent years and group by category
 
 ## Questions for TAs
 N/A
