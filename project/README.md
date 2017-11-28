@@ -47,7 +47,7 @@ Considering that Putin recently said “the nation that leads in AI will be the 
 The patent dataset (http://www.patentsview.org) will be used to carry out our research. PatentsView provides a useful API that allows us to make specific research according to a patent title, inventor, locations, year, companies or counttries. For example, we could research how many patents in a specific topic were delivered by IBM in California from 2012 and 2015. In order to obtain the information we shall send queries to the USPTO website. The UsPTO provides several useful documents that can be downloaded. For exemple we can obtain the Alpha-2 ISO norm ("US","GE","FR","CH",...) of every countries that were granted for a patent in the past. It was found that the patents are classified by CPC sectors which is useful to research for the trend in those areas. 
 It is possible that we will need other informations not contained in the dataset (e.g university ranking) which are useful to find correlations and enrich our dataset. For those specific case, we will scrap those informations from the web. At the end, the API will be used to make more specific research related to each sector of interest (e.g number of patents in solar panel vs. number of wind turbines design patents) and classify patents according to sectors by looking at keywords in their titles.
 
-## Result until milestone 2
+## Result obtained
 Several result can be concluded from our research:
   - In general granted patents are growing. We observed that it almost doubled over the past 10 years 
   - The US deliver by far most of the USPTO (Not surprizing since it is an US company) patents in the word, followed by Japan, Corea,    Germany and Canada
