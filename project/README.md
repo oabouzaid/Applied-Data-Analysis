@@ -48,13 +48,13 @@ The patent dataset (http://www.patentsview.org) will be used to carry out our re
 It is possible that we will need other informations not contained in the dataset (e.g university ranking) which are useful to find correlations and enrich our dataset. For those specific case, we will scrap those informations from the web. At the end, the API will be used to make more specific research related to each sector of interest (e.g number of patents in solar panel vs. number of wind turbines design patents) and classify patents according to sectors by looking at keywords in their titles.
 
 ## Result obtained
-Several result can be concluded from our research:
+Several results can be concluded from our research:
   - In general granted patents are growing. We observed that it almost doubled over the past 10 years 
-  - The US deliver by far most of the USPTO (Not surprizing since it is an US company) patents in the word, followed by Japan, Corea,    Germany and Canada
-  - The companies who deliver most of the patent are from the largest number to the lowest: IBM, Samsung, Canon, Sony, Toshiba. Most of     them are from the US, Japan or Corea
+  - The US delivers by far most of the USPTO (Not surprising since it is an US company) patents in the word, followed by Japan, Korea,    Germany and Canada
+  - The companies who deliver most of the patent are from the largest number to the lowest: IBM, Samsung, Canon, Sony, Toshiba. Most of     them are from the US, Japan or Korea
   - Most of the patents are published in Physics, followed by Electricity and Human Necessities
   - Switzerland and Germany put more effort in the transport sector than the US or Canada
-  - In general European countries are focus on the same sectors
+  - In general, European countries are focused more or less on the same sectors
   - In term of solar energy, we noted that this technology exploded between 2009 and 2013, especially in 2010
   
 ## Objective for milestone 3
