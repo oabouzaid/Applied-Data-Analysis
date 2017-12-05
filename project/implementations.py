@@ -203,25 +203,115 @@ def spider_chart(df, index, title=''):
     ax.set_thetagrids(angles * 180/np.pi, labels_)  #Label the axis using shorter terms
     
 
-def get_patents_keywords(key_words,year):
-    ''' Returns all the patents containing the given keywords, for a given year''' 
-    
+#A typical IPC symbol is H01L 31, H=section 01=classification 31=group
+#Look at http://www.wipo.int/classifications/ipc/en/ to find the IPC symbols of a category
+def get_patents_keywords(key_words,year, section, classification, group):
+    ''' Returns all the patents containing the given keywords, for a given year'''
+
     #Year query parameters
     query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
-  
+
+    query_section = '{"_or":['
+    for i,val in enumerate(section):
+        query_section += '{"_eq":{"ipc_section":"'+val+'"}}'
+        if i != len(section)-1:
+            query_section += ','
+    query_section += ']}'
+
+    query_classification = '{"_or":['
+    for i,val in enumerate(classification):
+        query_classification += '{"_eq":{"ipc_class":"'+val+'"}}'
+        if i != len(classification)-1:
+            query_classification += ','
+    query_classification += ']}'
+
+    query_group = '{"_or":['
+    for i,val in enumerate(group):
+        query_group += '{"_eq":{"ipc_main_group":"'+val+'"}}'
+        if i != len(group)-1:
+            query_group += ','
+    query_group += ']}'
+
     nb_patents=0
     dfPatents=pd.DataFrame()
     #Send a query for every keyword
-    for i in key_words:         
+    for i in key_words:
         query_key_words='{"_text_phrase":{"patent_title":"'+i+'"}}'
-        query='q={"_and":['+query_year+','+query_key_words+']}' 
-        output='&f=["patent_title","patent_number"]' 
-        
+        query='q={"_and":['+query_year+','+query_key_words+','+query_section+','+query_classification+','+query_group+']}'
+        output='&f=["patent_title","patent_number","ipc_section","ipc_main_group","ipc_class"]'
+        option='&o={"per_page":10000}'
         #Exception handler in case no patent is found for a given keyword
         try:
-            r = requests.get(BASE_URL()+query+output).json()
-            nb_patents+=pd.DataFrame(r).total_patent_count[0] 
-            dfPatents=pd.concat([dfPatents,pd.DataFrame(r)])
+            r = requests.get(BASE_URL()+query+output+option).json()
+            nb_patents+=pd.DataFrame(r).total_patent_count[0]
+            if nb_patents > 10000:
+                print('nb of patents too big (>10000)')
+            dfPatents=pd.concat([dfPatents,pd.DataFrame(r)],ignore_index=True)
         except ValueError:
-            pass   
-    return [dfPatents, nb_patents]
+            pass
+
+    #Clean the dataframe
+    dfPatents.reindex(list(range(len(dfPatents))))
+    columns = ["patent_title","patent_number","IPCs"]
+    dfPatents_cleaned=pd.DataFrame(columns=columns)
+    for col in columns:
+        dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
+
+    return [dfPatents_cleaned, nb_patents]
+
+#A typical IPC symbol is H01L 31, H=section 01=classification 31=group
+#Look at http://www.wipo.int/classifications/ipc/en/ to find the IPC symbols of a category
+def get_patents_2keywords(key_words1,key_words2,year, section, classification, group):
+    ''' Returns all the patents containing the given keywords, for a given year'''
+
+    #Year query parameters
+    query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
+
+    query_section = '{"_or":['
+    for i,val in enumerate(section):
+        query_section += '{"_eq":{"ipc_section":"'+val+'"}}'
+        if i != len(section)-1:
+            query_section += ','
+    query_section += ']}'
+
+    query_classification = '{"_or":['
+    for i,val in enumerate(classification):
+        query_classification += '{"_eq":{"ipc_class":"'+val+'"}}'
+        if i != len(classification)-1:
+            query_classification += ','
+    query_classification += ']}'
+
+    query_group = '{"_or":['
+    for i,val in enumerate(group):
+        query_group += '{"_eq":{"ipc_main_group":"'+val+'"}}'
+        if i != len(group)-1:
+            query_group += ','
+    query_group += ']}'
+
+    nb_patents=0
+    dfPatents=pd.DataFrame()
+    #Send a query for every keyword
+    for i in key_words1:
+        for j in key_words2:
+            query_key_words='{"_and":[{"_text_phrase":{"patent_title":"'+i+'"}},{"_text_phrase":{"patent_title":"'+j+'"}}]}'
+            query='q={"_and":['+query_year+','+query_key_words+','+query_section+','+query_classification+','+query_group+']}'
+            output='&f=["patent_title","patent_number","ipc_section","ipc_main_group","ipc_class"]'
+            option='&o={"per_page":10000}'
+            #Exception handler in case no patent is found for a given keyword
+            try:
+                r = requests.get(BASE_URL()+query+output+option).json()
+                nb_patents+=pd.DataFrame(r).total_patent_count[0]
+                if nb_patents > 10000:
+                    print('nb of patents too big (>10000)')
+                dfPatents=pd.concat([dfPatents,pd.DataFrame(r)],ignore_index=True)
+            except ValueError:
+                pass
+
+    #Clean the dataframe
+    dfPatents.reindex(list(range(len(dfPatents))))
+    columns = ["patent_title","patent_number","IPCs"]
+    dfPatents_cleaned=pd.DataFrame(columns=columns)
+    for col in columns:
+        dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
+
+    return [dfPatents_cleaned, nb_patents]
