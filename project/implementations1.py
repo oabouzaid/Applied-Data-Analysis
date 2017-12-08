@@ -258,16 +258,10 @@ def get_patents_keywords(keywords,year, list_ipc):
     dfPatents_cleaned = dfPatents_cleaned.loc[filter_list]
     return [dfPatents_cleaned, len(dfPatents_cleaned)]
 
-def get_nb_patent_years_1keyword(years,keywords,list_ipc):
+def get_nb_patent_years_keyword(years,keywords,list_ipc):
     list_patent_nb=[]
     for i in years:
         [dfPatent, nb_patent]=get_patents_keywords(keywords,str(i),list_ipc)
         list_patent_nb+=[nb_patent]
     return list_patent_nb
 
-def get_nb_patent_years_2keywords(years,keywords1, keywords2,list_ipc):
-    list_patent_nb=[]
-    for i in years:
-        [dfPatent, nb_patent]=get_patents_2keywords(keywords1,keywords2,str(i),list_ipc)
-        list_patent_nb+=[nb_patent]
-    return list_patent_nb
