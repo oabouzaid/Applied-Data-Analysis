@@ -239,12 +239,10 @@ def get_patents_keywords(keywords,year, list_ipc):
     for col in columns:
         dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
 
-
     filter_list=[]
     keyWordFound=False
     for title in dfPatents_cleaned.patent_title:
         for tuple_keyword in keywords:
-            print(tuple_keyword)
             for i in range(len(tuple_keyword)):
                 if tuple_keyword[i] not in title:
                     keyWordFound=False
