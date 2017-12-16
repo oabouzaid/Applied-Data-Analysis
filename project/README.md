@@ -21,7 +21,8 @@ In the future, what will be the evolution of the chosen sectors?
 
 ### By sector of interest:
 
-Energy: 
+**Energy:** 
+
 Are the patents in Energy increasing/decreasing? 
 How the different sectors in energy are evolving over time in compare to the other sectors?
 Is there any political decision that influenced the research in the Energy sector? 
@@ -30,13 +31,15 @@ Which country is more involved in those energy sector research?
 What is the proportion of patent applications in the fossil energy compared to the green energy and how did it evolve over time?
 Can we predict if the green energy will get over the fossil energy?
 
-FinTech: 
+**FinTech:**
+
 How did financial technology grow over the past decade? 
 How important is the use of mobile e-banking apps over the globe? 
 Which countries are involved the most in FinTech? Which companies hold most of FinTech patents? 
 All these questions can be answered by analyzing the patents relative to these technologies and observing their evolution over time.
 
-Artificial Intelligence:
+**Artificial Intelligence:**
+
 Which are the most cited and used patent within the field of AI?
 What is the popularity trend of the AI field? Like in its popularity in 1960s, will the popularity in recent years will also fade away in time or this time characteristic of the popularity trend is different?
 Which companies are holding most AI patents? Is there a relationship between number of AI patents hold and the rank (according to Forbes top 500) of a company (meaning that smartest companies are also the the biggest ones)?
