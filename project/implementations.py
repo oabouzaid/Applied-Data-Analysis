@@ -437,7 +437,10 @@ def plot_by_country(feature):
     df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)
     df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax6)
     plt.title('renewable', fontsize=15)
-    plt.subplots_adjust(hspace=.5)
+    if feature == 'assignee_organization':
+        plt.subplots_adjust(hspace=.5, wspace=1.0)
+    else:
+        plt.subplots_adjust(hspace=.5)
     plt.show()
 
 #get_patents_keywords_energy function send a request to the database for every
