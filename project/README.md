@@ -68,7 +68,9 @@ The project is more focused on the specific sectors of interest (Energy, AI, Fin
 
 ## Contribution of group members
 Nicolas: Functions to send requests to the API, evolution of patents over time, world map for patents, Energy part, Blog, Final presentation
-Oussama: World Maps for patents, Spider charts, Data Preprocessing and Scrapping External databases, FinTech part, Blog, Final presentation
-Suha: Patents by countries and sectors, Artificial intelligence, blog, Final presentation
+
+Oussama: World Maps for patents, Spider charts, Data Preprocessing, Scrapping External databases, FinTech part, Blog, Final presentation
+
+Süha: Patents by countries and sectors, Stacked Barplots, Scrapping news magazines, Artificial intelligence, blog, Final presentation
 
 
