@@ -34,6 +34,8 @@ Can we predict if the green energy will get over the fossil energy?
 How did financial technology grow over the past decade? 
 How important is the use of mobile e-banking apps over the globe? 
 Which countries are involved the most in FinTech? Which companies hold most of FinTech patents? 
+How did the FinTech patents evolve after Bitcoin was introduced in 2009?
+Which companies are the most involved in blockchain?
 All these questions can be answered by analyzing the patents relative to these technologies and observing their evolution over time.
 
 **Artificial Intelligence:**
