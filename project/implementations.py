@@ -33,7 +33,7 @@ def get_nb_patents_month(month, year):
     
     #Sends a GET request and store the data in a JSON file
     r = requests.get(BASE_URL()+query).json()
-    #Check if the number of patents obtained is larger than 100'000, which leads to biased result
+    #Check if the number of patents obtained is larger than 100'000, which leads to biased result 
     if pd.DataFrame(r).total_patent_count[0] > 100000:
         print("Number of patents exceeds 100'000, please take a shorter interval")
     #The total number of patents is contained in every rows of the dataframe (take 0 by default)
