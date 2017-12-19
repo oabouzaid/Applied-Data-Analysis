@@ -355,7 +355,7 @@ def read_df(PATH):
 #Plot the interactive barplot. plt_interactive_by_countryis called in the interact function
 #The function interact from ipywidgets library allows to create a scroll bar and trigger different event according
 #to the selection. When a sector is selected, the function plt_interactive_by_country is called. This function must
-#take one parameter which is the list of the sectors. Then, according to the technology selected, the related
+#take one parameter which is the list of the sectors. Then, according to the technology selected, the related 
 #barplot is displayed
 def plt_interactive_by_country(sector):
 
