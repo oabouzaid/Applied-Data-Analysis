@@ -1,8 +1,8 @@
 import numpy as np
-import pandas as pd 
+import pandas as pd
 import matplotlib.pyplot as plt
 import os
-import seaborn as sns 
+import seaborn as sns
 import requests
 from bs4 import BeautifulSoup
 import folium
@@ -21,24 +21,24 @@ def BASE_URL():
 def get_nb_patents_month(month, year):
     ''' Returns the number of patents for a given month of a given year '''
     s = ''
-    
+
     #Special case: if (month == December) we take the patents from December 1st to to January 1st of the following year
-    if(month!='12'): 
-        s = year+'-'+str(int(month)+1) 
+    if(month!='12'):
+        s = year+'-'+str(int(month)+1)
     else:
         s = str(int(year)+1)+'-01'
     #query to be sent
     query = 'q={"_and":[{"_gte":{"patent_date":"'+year+'-'+month+'-01"}},\
-        {"_lt":{"patent_date":"'+ s +'-01"}}]}' 
-    
+        {"_lt":{"patent_date":"'+ s +'-01"}}]}'
+
     #Sends a GET request and store the data in a JSON file
     r = requests.get(BASE_URL()+query).json()
-    #Check if the number of patents obtained is larger than 100'000, which leads to biased result 
+    #Check if the number of patents obtained is larger than 100'000, which leads to biased result
     if pd.DataFrame(r).total_patent_count[0] > 100000:
         print("Number of patents exceeds 100'000, please take a shorter interval")
     #The total number of patents is contained in every rows of the dataframe (take 0 by default)
     return pd.DataFrame(r).total_patent_count[0]
- 
+
 
 def get_nb_patents_year(year):
     ''' Returns the number of granted patent for a given year (12 months). Uses get_nb_patents_month() to
@@ -59,26 +59,26 @@ def get_nb_patent_country(country):
     ''' Requests all the patents of the year 2016 for a given country '''
     ''' Outputs the inventor country for checking purposes '''
     query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},\
-    {"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
+    {"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}'
     output='&f=["inventor_country"]'
-    r = requests.get(BASE_URL()+query+output).json() 
+    r = requests.get(BASE_URL()+query+output).json()
 
     #Catch an exception in case a given country did not deliver any patent in 2016, i.e. is not cited in the DataBase
     try:
-        nb_patents= pd.DataFrame(r).total_patent_count[0] 
-        #Special case: The request cannot give more than 100'000 patents, we break the time interval into 2 
-        if nb_patents >= 100000: 
+        nb_patents= pd.DataFrame(r).total_patent_count[0]
+        #Special case: The request cannot give more than 100'000 patents, we break the time interval into 2
+        if nb_patents >= 100000:
             #Send the request for twice 6 month (result always less than 100000)
-            query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},{"_lt":{"patent_date":"2016-07-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
-            r = requests.get(BASE_URL()+query+output).json() 
-            #number of patent is countained in every rows of the dataframe            
-            nb_patents= pd.DataFrame(r).total_patent_count[0] 
-            query='q={"_and":[{"_gte":{"patent_date":"2016-07-01"}},{"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}' 
-            r = requests.get(BASE_URL()+query+output).json() 
+            query='q={"_and":[{"_gte":{"patent_date":"2016-01-01"}},{"_lt":{"patent_date":"2016-07-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}'
+            r = requests.get(BASE_URL()+query+output).json()
+            #number of patent is countained in every rows of the dataframe
+            nb_patents= pd.DataFrame(r).total_patent_count[0]
+            query='q={"_and":[{"_gte":{"patent_date":"2016-07-01"}},{"_lt":{"patent_date":"2017-01-01"}},{"_eq":{"inventor_country":"'+country+'"}}]}'
+            r = requests.get(BASE_URL()+query+output).json()
             #Add the 2 requests together
-            nb_patents += pd.DataFrame(r).total_patent_count[0] 
+            nb_patents += pd.DataFrame(r).total_patent_count[0]
     except ValueError: #In case no patents are found
-        nb_patents=0   
+        nb_patents=0
     return int(nb_patents)
 
 
@@ -88,13 +88,13 @@ def ret_color(feature, colors):
     if (feature['properties']['iso_a2'] in colors.keys()):
         return colors[feature['properties']['iso_a2']]
     else:
-        #Returns the white color if a country does not show up in the list of patents 
+        #Returns the white color if a country does not show up in the list of patents
         return '#ffffff'
 
 def get_patents(year_start, month_start, year_end, month_end):
     '''Returns the granted patents between the given dates (year and month)'''
     '''Get patent_id, patent_number and patent_title for granted patents between given dates.'''
-    
+
     query='q={"_and":[{"_gte":{"patent_date":"%d-%d-01"}},\
                       {"_lt":{"patent_date":"%d-%d-01"}}]}\
                       &o={"page":1,"per_page":100}' % (year_start, month_start, year_end, month_end)
@@ -128,7 +128,7 @@ def get_patents_company(year_start, month_start, year_end, month_end, page_num):
     return requests.get(BASE_URL() + query).json()
 
 
-# Helper function 
+# Helper function
 def get_patents_country_sector(year_start, month_start, year_end, month_end, page_num):
     '''Get all granted patents by assignee_organization (company name) and assignee_total_num_patents (number of that companie's patents)
         by sector, using CPC between given dates. (CPC stands for Cooperative Patent Classification)'''
@@ -169,7 +169,7 @@ def get_countries_by_sectors():
 
 
 
-def fıgure_by_sector(category, label, fig_index, axes, df): 
+def fıgure_by_sector(category, label, fig_index, axes, df):
     ''' Plots the TOP10 countries for a given sector (Categories 'A','B','C', etc.), in terms of the number of granted patents'''
     a = df.sort_values(by=category, ascending=False)
     a.head(10).plot.bar(y=category, figsize=(9,7), fontsize=20, subplots=True, ax=axes[fig_index[0], fig_index[1]], label=label)
@@ -181,16 +181,16 @@ category_label = [('A', 'Human Necessities'),('B', 'Operations and Transport'),(
 
 
 def spider_chart(df, index, title=''):
-    ''' Draws a spider chart showing the involvment level of a given country in all the 7 sectors in CPC 
+    ''' Draws a spider chart showing the involvment level of a given country in all the 7 sectors in CPC
         (Cooperative Patent Classification) by showing the relative number of granted patents for each sector, country-wise'''
     labels = np.array(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'Y'])
 
     stats = df.loc[index, labels].values
-    angles=np.linspace(0, 2*np.pi, len(labels), endpoint=False) 
-  
-    stats=np.concatenate((stats,[stats[0]]))  
-    angles=np.concatenate((angles,[angles[0]])) 
-    
+    angles=np.linspace(0, 2*np.pi, len(labels), endpoint=False)
+
+    stats=np.concatenate((stats,[stats[0]]))
+    angles=np.concatenate((angles,[angles[0]]))
+
     fig= plt.figure()
     ax = fig.add_subplot(111, polar=True)   # Setting up a polar axis
     ax.plot(angles, stats, 'o-', linewidth=1.5, color='r')  # Draw the plot (or the frame on the radar chart)
@@ -202,10 +202,7 @@ def spider_chart(df, index, title=''):
 
     ax.set_title(title) # The title corresponds to the name of the given country
     ax.set_thetagrids(angles * 180/np.pi, labels_)  #Label the axis using shorter terms
-    
 
-#A typical IPC symbol is H01L 31, H=section 01=classification 31=group
-#Look at http://www.wipo.int/classifications/ipc/en/ to find the IPC symbols of a category
 
 def query_ipc_by(field, flag):
     query = '{"_or":['
@@ -216,30 +213,9 @@ def query_ipc_by(field, flag):
     query += ']}'
     return query
 
-def get_patents_keywords(key_words,year):
-    ''' Returns all the patents containing the given keywords, for a given year''' 
-    
-    #Year query parameters
-    query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
-  
-    nb_patents=0
-    dfPatents=pd.DataFrame()
-    #Send a query for every keyword
-    for i in key_words:         
-        query_key_words='{"_text_phrase":{"patent_title":"'+i+'"}}'
-        query='q={"_and":['+query_year+','+query_key_words+']}' 
-        output='&f=["patent_title","patent_number"]' 
-        
-        #Exception handler in case no patent is found for a given keyword
-        try:
-            r = requests.get(BASE_URL()+query+output).json()
-            nb_patents+=pd.DataFrame(r).total_patent_count[0] 
-            dfPatents=pd.concat([dfPatents,pd.DataFrame(r)])
-        except ValueError:
-            pass   
-    return dfPatents, nb_patents
-
-#Get patents by IPC, and then filter them by keywords                                                                       (used for FinTech)
+#Get patents by IPC, and then filter them by keywords
+#A typical IPC symbol is H01L 31, H=section 01=classification 31=group
+#Look at http://www.wipo.int/classifications/ipc/en/ to find the IPC symbols of a category#                                                                     (used for FinTech)
 def get_patents_keywords_ipc(keywords, year, list_ipc):
     ''' Returns all the patents containing the given keywords, for a given year'''
 
@@ -253,7 +229,7 @@ def get_patents_keywords_ipc(keywords, year, list_ipc):
         query_group = '{"_eq":{"ipc_main_group":"'+group+'"}}'
         query_section = '{"_eq":{"ipc_section":"'+section+'"}}'
         query_classification = '{"_eq":{"ipc_class":"'+classification+'"}}'
-        
+
         query='q={"_and":['+query_year+','+query_section+','+query_classification+','+query_group+']}'
         output='&f=["patent_title","patent_number","ipc_section","ipc_main_group","ipc_class","patent_num_cited_by_us_patents",\
                       "assignee_country", "assignee_organization", "patent_date",\
@@ -271,7 +247,7 @@ def get_patents_keywords_ipc(keywords, year, list_ipc):
 
     #Clean the dataframe
     dfPatents.reindex(list(range(len(dfPatents))))
-    
+
     columns = ["patent_title","patent_number", "IPCs", "patent_num_cited_by_us_patents","assignees",\
                "patent_date", "inventors"]
 
@@ -279,7 +255,7 @@ def get_patents_keywords_ipc(keywords, year, list_ipc):
     for col in columns:
         dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
 
-    
+
     filter_list=[]
     keyWordFound=False
     for title in dfPatents_cleaned.patent_title:
@@ -287,115 +263,33 @@ def get_patents_keywords_ipc(keywords, year, list_ipc):
             for i in range(len(tuple_keyword)):
                 if tuple_keyword[i] not in title:
                     keyWordFound=False
-                    break                  
+                    break
                 if i == len(tuple_keyword)-1:
-                    keyWordFound=True                    
+                    keyWordFound=True
             if keyWordFound==True:
                 break
         filter_list.append(keyWordFound)
-     
+
     dfPatents_cleaned = dfPatents_cleaned.loc[filter_list]
     return dfPatents_cleaned, len(dfPatents_cleaned)
 
 
-##########################################################################################
-#                    THIS FUNCTION IS USELESS
-##########################################################################################
-
-def get_patents_keywords_fil(key_words, year, section, classification, group):
-    ''' Returns all the patents containing the given keywords, for a given year'''
-
-    #Year query parameters
-    query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
-
-    #Query all the three IPC parts
-    query_section = query_by(section, "ipc_section")
-    query_classification = query_by(classification, "ipc_class")
-    query_group = query_by(group, "ipc_main_group")
-
-    nb_patents=0
-    dfPatents=pd.DataFrame()
-    
-    #Query each keyword
-    for i in key_words:
-        query_key_words='{"_text_phrase":{"patent_title":"'+i+'"}}'
-        query='q={"_and":['+query_year+','+query_key_words+','+query_section+','+query_classification+','+query_group+']}'
-        output='&f=["patent_title","patent_number","ipc_section","ipc_main_group","ipc_class"]'
-        option='&o={"per_page":10000}'
-        #Exception handler in case no patent is found for a given keyword
-        try:
-            r = requests.get(BASE_URL()+query+output+option).json()
-            nb_patents+=pd.DataFrame(r).total_patent_count[0]
-            if nb_patents > 10000:
-                print('nb of patents too big (>10000)')
-            dfPatents=pd.concat([dfPatents,pd.DataFrame(r)],ignore_index=True)
-        except ValueError:
-            pass
-
-    #Clean the dataframe
-    dfPatents.reindex(list(range(len(dfPatents))))
-    columns = ["patent_title","patent_number","IPCs"]
-    dfPatents_cleaned=pd.DataFrame(columns=columns)
-    for col in columns:
-        dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
-
-    return [dfPatents_cleaned, nb_patents]
-
-##########################################################################################
-
-
 #A typical IPC symbol is H01L 31, H=section 01=classification 31=group
 #Look at http://www.wipo.int/classifications/ipc/en/ to find the IPC symbols of a category
-
-#Used for solar energy part (by IPC)
-def get_patents_keywords_ipc_sk(key_words1, key_words2, year, section, classification, group):
-    ''' Returns all the patents containing the given keywords, for a given year'''
-
-    #Year query parameters
-    query_year = '{"_gte":{"patent_date":"'+year+'-01-01"}},{"_lt":{"patent_date":"'+str(int(year)+1)+'-01-01"}}'
-
-    query_section = query_by(section, "ipc_section")
-    query_classification = query_by(classification, "ipc_class")
-    query_group = query_by(group, "ipc_main_group")
-
-    nb_patents=0
-    dfPatents=pd.DataFrame()
-    #Send a query for every keyword
-    for i in key_words1:
-        for j in key_words2:
-            query_key_words='{"_and":[{"_text_phrase":{"patent_title":"'+i+'"}},{"_text_phrase":{"patent_title":"'+j+'"}}]}'
-            query='q={"_and":['+query_year+','+query_key_words+','+query_section+','+query_classification+','+query_group+']}'
-            output='&f=["patent_title","patent_number","ipc_section","ipc_main_group","ipc_class"]'
-            option='&o={"per_page":10000}'
-            #Exception handler in case no patent is found for a given keyword
-            try:
-                r = requests.get(BASE_URL()+query+output+option).json()
-                nb_patents+=pd.DataFrame(r).total_patent_count[0]
-                dfPatents=pd.concat([dfPatents,pd.DataFrame(r)],ignore_index=True)
-            except ValueError:
-                pass
-
-    #Clean the dataframe
-    dfPatents.reindex(list(range(len(dfPatents))))
-    columns = ["patent_title","patent_number","IPCs"]
-    dfPatents_cleaned=pd.DataFrame(columns=columns)
-    for col in columns:
-        dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
-
-    return [dfPatents_cleaned, nb_patents]
-
-
 def get_nb_patent_years_keyword(years,keywords,list_ipc):
     list_patent_nb = []
     df = pd.DataFrame()
     for i in years:
-        if (i != 2005): 
+        if (i != 2005):
             dfPatent, nb_patent = get_patents_keywords_ipc(keywords,str(i),list_ipc)
             list_patent_nb.append(nb_patent)
             df= pd.concat([df,dfPatent],ignore_index=True)
     return list_patent_nb, df
 
-
+#plot the number of patents
+#Parameters: x,y = data
+#           x_axis, y_axis = labels of axes
+#           title
 def plt_nb_patent(x,y,x_axis,y_axis,title):
     plt.plot(x,y)
     plt.xlabel(x_axis)
@@ -404,12 +298,13 @@ def plt_nb_patent(x,y,x_axis,y_axis,title):
     plt.grid(True, 'major', 'y', ls='--', lw=.5, c='k', alpha=.3)
 
 
+#Save df to excel wile with the filename excel_title
 def savedfexcel(df, excel_title):
     writer = pd.ExcelWriter('{0}.xlsx'.format(excel_title))
     df.to_excel(writer,'Sheet1')
     writer.save()
 
-
+#Get the growth in nb of patents according to the number of patents and the year
 def get_growth(years, list_nb_patents):
     growth=[]
     for i in range(len(years)-1):
@@ -417,6 +312,8 @@ def get_growth(years, list_nb_patents):
     return growth
 
 
+
+#The function build_dataframe research all these data by using the API of patentsview
 def build_dataframe(years,keywords,list_ipc):
     list_patent_nb=[]
     dfPatents=pd.DataFrame()
@@ -427,30 +324,41 @@ def build_dataframe(years,keywords,list_ipc):
         dfPatents.set_index([list(range(len(dfPatents)))],inplace=True)
     return dfPatents
 
-
+#df_get_nb_by_group_and_clean function take in paramenter a dataframe with all the patents and a column for the year, country and company.
+#The second parameter is 'inventor_country' or 'assignee_organisation' depending if we want to classify by country
+#or companies. The last paramenter is True if we want to include a column 'total' which is the sum of umber of
+#patents for a company or country for every year. The function returns the companies or countries classified
+#from the biggest to the smallest patent provider. Each colums contains the number of patents for each years.
+#This function will be used many times below to classify the number of patents by country or companies.
 def df_get_nb_by_group_and_clean(df, group, years, showtotal=False):
     dfcopy=df.copy()
     dfcopy['nb patent']=1
-    dfpatentgroup = dfcopy.groupby(['year',group]).sum()
-    dfpatentgroup=dfpatentgroup.unstack(level=1).fillna(0)
-    dfpatentgroup.sort_values(by=years,axis=1, ascending=False,inplace=True)
-    dfpatentgroup_copy=dfpatentgroup.transpose().copy()
-    dfpatentgroup_copy['total'] = dfpatentgroup_copy.apply(sum, axis=1)
-    dfpatentgroup_copy.reset_index(inplace=True)
+    dfpatentgroup = dfcopy.groupby(['year',group]).sum() #group by countries or companies
+    dfpatentgroup=dfpatentgroup.unstack(level=1).fillna(0) #unstack the years
+    dfpatentgroup.sort_values(by=years,axis=1, ascending=False,inplace=True) #sort by nb of patents
+    dfpatentgroup_copy=dfpatentgroup.transpose().copy() #transpose the dataframe
+    dfpatentgroup_copy['total'] = dfpatentgroup_copy.apply(sum, axis=1) #add a new column total
+    dfpatentgroup_copy.reset_index(inplace=True) #Reset the index
     dfpatentgroup_copy.drop('level_0', axis=1, inplace=True)
-    dfpatentgroup_copy.set_index(group, inplace=True)
+    dfpatentgroup_copy.set_index(group, inplace=True) #set the company or country as index
 
-    if showtotal==False:
+    if showtotal==False: #Keep or remove the column total after sorting by best company/country
         clean_df = dfpatentgroup_copy.sort_values(by='total', ascending=False).drop('total',axis=1)
     else:
         clean_df = dfpatentgroup_copy.sort_values(by='total', ascending=False)
     return clean_df
 
+#Read the excel file containing a dataframe
 def read_df(PATH):
     return pd.read_excel(PATH + '.xlsx')
 
+#Plot the interactive barplot. plt_interactive_by_countryis called in the interact function
+#The function interact from ipywidgets library allows to create a scroll bar and trigger different event according
+#to the selection. When a sector is selected, the function plt_interactive_by_country is called. This function must
+#take one parameter which is the list of the sectors. Then, according to the technology selected, the related
+#barplot is displayed
 def plt_interactive_by_country(sector):
-    
+
     feature = 'inventor_country'
     years=list(range(2010,2017))
 
@@ -467,15 +375,15 @@ def plt_interactive_by_country(sector):
     if sector == 'carbon capture':
         df=df_get_nb_by_group_and_clean(read_df('patent_carbon_storage'), feature,years, False).head(10)
     if sector == 'renewable':
-        df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)       
+        df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)
     df.plot.barh(stacked=True, fontsize=20, figsize=(20,13), rot=0, grid=True)
     plt.show()
 
 
 
-
+#Same function as before but for the companies
 def plt_interactive_by_company(sector):
-    
+
     feature = 'assignee_organization'
     years=list(range(2010,2017))
 
@@ -492,11 +400,14 @@ def plt_interactive_by_company(sector):
     if sector == 'carbon capture':
         df=df_get_nb_by_group_and_clean(read_df('patent_carbon_storage'), feature,years, False).head(10)
     if sector == 'renewable':
-        df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)       
+        df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)
     df.plot.barh(stacked=True, fontsize=20, figsize=(20,13), rot=0, grid=True)
     plt.show()
 
-
+#get_patents_keywords_energy function send a request to the database for every
+#ipc in the list and get all the patents back. The the patents are filtered by the keywords contained
+#in the list. Ex : keywords_solar_power= [["solar", "cell"], ["solarcell"],] will keep as match every title
+#that contains ("solar" and "cell") or "solarcell"
 def get_patents_keywords_energy(keywords,year, list_ipc):
     ''' Returns all the patents containing the given keywords, for a given year'''
 
@@ -530,6 +441,7 @@ def get_patents_keywords_energy(keywords,year, list_ipc):
     columns = ["patent_title","patent_number","inventor_country","assignee_organization"]
     dfPatents_cleaned=pd.DataFrame(columns=columns)
 
+    #Retreive the information received by the request to put it in a clean dataframe
     for col in columns:
         if col == 'inventor_country':
             dfPatents_cleaned[col]=list(map(lambda x: x['inventors'][0][col], dfPatents.patents))
@@ -537,7 +449,8 @@ def get_patents_keywords_energy(keywords,year, list_ipc):
             dfPatents_cleaned[col]=list(map(lambda x: x['assignees'][0][col], dfPatents.patents))
         else:
             dfPatents_cleaned[col]=list(map(lambda x: x[col], dfPatents.patents))
-            
+
+    #Filter the dataframe by keywords
     filter_list=[]
     keyWordFound=False
     for title in dfPatents_cleaned.patent_title:
@@ -555,6 +468,8 @@ def get_patents_keywords_energy(keywords,year, list_ipc):
     dfPatents_cleaned = dfPatents_cleaned.loc[filter_list]
     return [dfPatents_cleaned, len(dfPatents_cleaned)]
 
+#get_nb_patent_years_keyword_energy retrun a list of number of patents for every years
+#and by sector. This funcion uses get_patents_keywords_energy above
 def get_nb_patent_years_keyword_energy(years,keywords,list_ipc):
     list_patent_nb=[]
     for i in years:
