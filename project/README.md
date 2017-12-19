@@ -13,9 +13,7 @@ Question answered:
 What is the general trend in research (patent application)? Is it growing?  
 Which countries deliver more patents? 
 Which sectors are the most popular/in which countries?
-
-Ongoing questions
-Are the number of patent delivered in a country correlated with the quality of its universities?
+Are the number of AI patent delivered in a country correlated with the Defense strength of those countries?
 Which sectors have grown the most over time? 
 In the future, what will be the evolution of the chosen sectors?
 
@@ -60,12 +58,7 @@ Several results can be concluded from our research:
   - In general, European countries are focused more or less on the same sectors
   - In terms of solar energy, we noted that this technology exploded between 2009 and 2013, especially in 2010
   
-## Objectives for milestone 3
-For the final milestone, the project will be more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions will be answered. Correlations between the specific sectors and the other patent applications will be found trying to find explanation related to the evolution of those technologies. Every sector will be studied into detailed for relevant and specific countries/companies. 
-From milestone 2, we noticed that the pattern of the countries are very similar between countries within the same continent, we can study each technology for one country per continent (We will aslo study if this classification is relevant). Every sector of interest evolved differently during the past. 
-the final goal of this project will be to predict what is the potential of those different technologies. In order to classify a patent in a sector, we shall find keywords that are relevant for the given technology.
+## [UPDATE] Milestone 3
+In this part, he project is more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions are answered. Every sector is studied in detail with respect to relevant and specific countries/companies, along with their evolution and the potential of the three different technologies is discussed. For this milestone, we built a smart search engine that classifies the patents into the three different sectors (defined within the function **get_patents_keywords**). The engine is fed with IPC codes, and keywords relative to each domain of interest, and outputs only the patents are very closely related to what we are intending to look for.
 
-## Questions for TAs
-Can we correlate patent applications with how much reaserch is carried for the different sectors (Energy, AI and FinTech)?
-Is it relevant to find a correlation between university quality and the number of patents published by this university? 
-Any advice to find relevant keywords which will allow us to classify a patent into a specific technology?
+
