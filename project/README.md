@@ -58,7 +58,7 @@ Several results can be concluded from our research:
   - In general, European countries are focused more or less on the same sectors
   - In terms of solar energy, we noted that this technology exploded between 2009 and 2013, especially in 2010
   
-## [UPDATE] Milestone 3
-In this part, he project is more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions are answered. Every sector is studied in detail with respect to relevant and specific countries/companies, along with their evolution and the potential of the three different technologies is discussed. For this milestone, we built a smart search engine that classifies the patents into the three different sectors (defined within the function **get_patents_keywords**). The engine is fed with IPC codes, and keywords relative to each domain of interest, and outputs only the patents are very closely related to what we are intending to look for.
+## Milestone 3
+The project is more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions are answered. Every sector is studied in detail with respect to relevant and specific countries/companies, along with their evolution and the potential of the three different technologies is discussed. For this milestone, we built a smart search engine that classifies the patents into the three different sectors (defined within the function **get_patents_keywords**). The engine is fed with IPC codes, and keywords relative to each domain of interest, and outputs only the patents are very closely related to what we are intending to look for.
 
 
