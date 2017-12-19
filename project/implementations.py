@@ -355,7 +355,7 @@ def read_df(PATH):
 #Plot the interactive barplot. plt_interactive_by_countryis called in the interact function
 #The function interact from ipywidgets library allows to create a scroll bar and trigger different event according
 #to the selection. When a sector is selected, the function plt_interactive_by_country is called. This function must
-#take one parameter which is the list of the sectors. Then, according to the technology selected, the related 
+#take one parameter which is the list of the sectors. Then, according to the technology selected, the related
 #barplot is displayed
 def plt_interactive_by_country(sector):
 
@@ -402,6 +402,42 @@ def plt_interactive_by_company(sector):
     if sector == 'renewable':
         df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)
     df.plot.barh(stacked=True, fontsize=20, figsize=(20,13), rot=0, grid=True)
+    plt.show()
+
+#This function plot all the plots of number of patents for the energy sectors, classified by
+#countries or companiy. Feature = 'inventor_country' or 'assignee_organisation'
+def plot_by_country(feature):
+    years=list(range(2010,2017))
+    fig=plt.figure()
+    ax=fig.add_subplot(421)
+    df=df_get_nb_by_group_and_clean(read_df('patent_solar_photo'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax)
+    plt.title('solar photo', fontsize=15)
+    ax1=fig.add_subplot(422)
+    df=df_get_nb_by_group_and_clean(read_df('patent_solar_thermo'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax1)
+    plt.title('solar thermal', fontsize=15)
+    ax2=fig.add_subplot(423)
+    df=df_get_nb_by_group_and_clean(read_df('patent_wind'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax2)
+    plt.title('wind', fontsize=15)
+    ax3=fig.add_subplot(424)
+    df=df_get_nb_by_group_and_clean(read_df('patent_hydro'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax3)
+    plt.title('hydro', fontsize=15)
+    ax4=fig.add_subplot(425)
+    df=df_get_nb_by_group_and_clean(read_df('patent_wave_tidal'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax4)
+    plt.title('wave and tidal', fontsize=15)
+    ax5=fig.add_subplot(426)
+    df=df_get_nb_by_group_and_clean(read_df('patent_carbon_storage'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax5)
+    plt.title('carbon capture and storage', fontsize=15)
+    ax6=fig.add_subplot(427)
+    df=df_get_nb_by_group_and_clean(read_df('patent_renewable'), feature, years, False).head(10)
+    df.plot.barh(stacked=True, fontsize=15, figsize=(20,13), rot=0, grid=True,ax=ax6)
+    plt.title('renewable', fontsize=15)
+    plt.subplots_adjust(hspace=.5)
     plt.show()
 
 #get_patents_keywords_energy function send a request to the database for every
