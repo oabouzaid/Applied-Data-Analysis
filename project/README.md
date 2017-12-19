@@ -67,8 +67,8 @@ Several results can be concluded from our research:
 The project is more focused on the specific sectors of interest (Energy, AI, Fintech). The research questions are answered. Every sector is studied in detail with respect to relevant and specific countries/companies, along with their evolution and the potential of the three different technologies is discussed. For this milestone, we built a smart search engine that classifies the patents into the three different sectors (defined within the function **get_patents_keywords**). The engine is fed with IPC codes, and keywords relative to each domain of interest, and outputs only the patents are very closely related to what we are intending to look for.
 
 ## Contribution of group members
-Nicolas: Functions to send requests to the API, evolution of patents over time, world map for patents, energy, blog, final presentation
-Oussama: world map for patents, spider charts, fintech, blog, final presentation
-Suha: Top patents companies, patents by countries and sectors, artificial intelligence, blog, final presentation
+Nicolas: Functions to send requests to the API, evolution of patents over time, world map for patents, Energy part, Blog, Final presentation
+Oussama: World Maps for patents, Spider charts, Data Preprocessing and Scrapping External databases, FinTech part, Blog, Final presentation
+Suha: Patents by countries and sectors, Artificial intelligence, blog, Final presentation
 
 
